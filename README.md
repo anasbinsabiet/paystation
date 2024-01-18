@@ -1,4 +1,4 @@
-# Paystation Payment Gateway
+# Paystation Payment Gateway(This is not workable on latest WordPress version)
 1. Download a zip file to the current repository
 2. Upload it to add new plugin from wordpress dashboard
 3. Activate Paystation Payment Gateway
