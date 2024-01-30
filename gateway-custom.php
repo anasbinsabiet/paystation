@@ -63,12 +63,12 @@ function paystation_payment_gateway_init()
 	// include extended gateway class 
 	include_once('paystation_payment_gateway.php');
 }
-
 add_action('wp_enqueue_scripts', 'my_plugin_enqueue_scripts');
-function my_plugin_enqueue_scripts()
-{
-	wp_enqueue_script('paystation', plugin_dir_url(__FILE__) . 'assets/custom.js', array('jquery'), '1.0.0', true);
-	wp_enqueue_style('paystation', plugins_url('assets/custom.css', __FILE__), false, '1.0.0', 'all');
+function my_plugin_enqueue_scripts() {
+    // Enqueue JavaScript
+    wp_enqueue_script('paystation', plugin_dir_url(__FILE__) . 'assets/custom.js', array('jquery'), '1.0.0', true);
+    // Enqueue Stylesheet
+    wp_enqueue_style('paystation', plugins_url('assets/custom.css', __FILE__), false, '1.0.0', 'all');
 }
 
 add_action('woocommerce_after_order_notes', 'my_custom_content');
@@ -124,6 +124,28 @@ function complete_order_callback()
 	$order = wc_create_order();
 	$payment_gateways = WC()->payment_gateways->payment_gateways();
 	$order->set_payment_method($payment_gateways[$data["payment_method"]]);
+	// Set customer data
+	$order->set_billing_first_name($data["billing_first_name"]);
+	$order->set_billing_last_name($data["billing_last_name"]);
+	$order->set_billing_company($data["billing_company"]);
+	$order->set_billing_email($data["billing_email"]);
+	$order->set_billing_phone($data["billing_phone"]);
+	$order->set_billing_address_1($data["billing_address_1"]);
+	$order->set_billing_address_2($data["billing_address_2"]);
+	$order->set_billing_city($data["billing_city"]);
+	$order->set_billing_state($data["billing_state"]);
+	$order->set_billing_postcode($data["billing_postcode"]);
+	$order->set_billing_country($data["billing_country"]);
+
+	$order->set_shipping_first_name($data["shipping_first_name"]);
+	$order->set_shipping_last_name($data["shipping_last_name"]);
+	$order->set_shipping_company($data["shipping_company"]);
+	$order->set_shipping_address_1($data["shipping_address_1"]);
+	$order->set_shipping_address_2($data["shipping_address_2"]);
+	$order->set_shipping_city($data["shipping_city"]);
+	$order->set_shipping_state($data["shipping_state"]);
+	$order->set_shipping_postcode($data["shipping_postcode"]);
+	$order->set_shipping_country($data["shipping_country"]);
 	$cart = WC()->cart;
 	foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
 		$product_id = $cart_item['product_id'];
@@ -204,6 +226,7 @@ function complete_order_callback()
 	$order->set_customer_user_agent(wc_get_user_agent());
 	$order->set_address($billing_address, 'billing');
 	$order->set_address($shipping_address, 'shipping');
+
 	$order_id = $order->get_id();
 	update_post_meta($order_id, '_customer_user', get_current_user_id());
 
